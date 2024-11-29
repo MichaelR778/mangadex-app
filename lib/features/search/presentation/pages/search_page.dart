@@ -182,7 +182,6 @@ class _SearchPageState extends State<SearchPage> {
                   if (mangas.isEmpty) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SvgPicture.asset(
                           'assets/vectors/empty.svg',
@@ -228,7 +227,6 @@ class _SearchPageState extends State<SearchPage> {
                 else if (state is SearchError) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
                         'assets/vectors/error.svg',

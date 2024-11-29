@@ -66,6 +66,43 @@ class MangadexMangaRepo implements MangaRepo {
   }
 
   @override
+  Future<List<Manga>> getMangas(List<String> mangaIds) async {
+    try {
+      final uri = Uri.https(
+        baseUrl,
+        '/manga',
+        {
+          'ids[]': mangaIds,
+          'includes[]': ['cover_art'],
+          'availableTranslatedLanguage[]': ['en', 'id'],
+          'order[latestUploadedChapter]': 'desc',
+        },
+      );
+      final response = await http.get(uri);
+
+      // 200 ok response
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+
+        final mangaJsons = json['data'] as List<dynamic>;
+        final mangas = mangaJsons.map((json) => Manga.fromJson(json)).toList();
+
+        return mangas;
+      }
+
+      // 503 server is down
+      else if (response.statusCode == 503) {
+        throw Exception('Server is currently down');
+      }
+
+      // something went wrong
+      throw Exception('Error code ${response.statusCode}');
+    } catch (e) {
+      throw Exception('Failed to get manga by ids: $e');
+    }
+  }
+
+  @override
   Future<ChapterList> getMangaChapters(String mangaId, int offset) async {
     try {
       final uri = Uri.https(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mangadex_app/features/favorite/presentation/cubits/favorite_cubit.dart';
+import 'package:mangadex_app/features/favorite/presentation/cubits/favorite_state.dart';
 import 'package:mangadex_app/features/manga/domain/entities/manga.dart';
 import 'package:mangadex_app/features/manga/presentation/cubits/chapter_cubit.dart';
 import 'package:mangadex_app/features/manga/presentation/cubits/chapter_state.dart';
@@ -93,15 +95,33 @@ class _MangaPageState extends State<MangaPage> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
-        // actions: [
-        //   IconButton(
-        //     onPressed: () {},
-        //     icon: const Icon(
-        //       Icons.favorite,
-        //       color: AppColors.primary,
-        //     ),
-        //   )
-        // ],
+        actions: [
+          BlocConsumer<FavoriteCubit, FavoriteState>(
+            builder: (context, state) {
+              final mangaId = widget.manga.id;
+              if (state is FavoriteLoaded) {
+                return IconButton(
+                  onPressed: () =>
+                      context.read<FavoriteCubit>().toggleFavorite(mangaId),
+                  icon: Icon(
+                    state.mangaIds.contains(mangaId)
+                        ? Icons.favorite
+                        : Icons.favorite_outline,
+                    color: AppColors.primary,
+                  ),
+                );
+              }
+              return Container();
+            },
+            listener: (context, state) {
+              if (state is FavoriteError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message)),
+                );
+              }
+            },
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -167,8 +187,7 @@ class _MangaPageState extends State<MangaPage> {
                                 if (loadingProgress == null) return child;
                                 return Container(
                                   width: MediaQuery.of(context).size.width / 4,
-                                  height:
-                                      MediaQuery.of(context).size.height / 6,
+                                  height: MediaQuery.of(context).size.width / 3,
                                   decoration: BoxDecoration(
                                     color: AppColors.placeholder,
                                     borderRadius: BorderRadius.circular(10),

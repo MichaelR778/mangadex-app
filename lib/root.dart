@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mangadex_app/features/favorite/favorite_page.dart';
+import 'package:mangadex_app/features/favorite/presentation/pages/favorite_page.dart';
 import 'package:mangadex_app/features/home/presentation/pages/home_page.dart';
 import 'package:mangadex_app/features/search/presentation/pages/search_page.dart';
 import 'package:mangadex_app/theme/app_colors.dart';

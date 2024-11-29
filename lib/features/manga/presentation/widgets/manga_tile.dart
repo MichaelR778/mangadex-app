@@ -77,7 +77,7 @@ class _MangaTileState extends State<MangaTile> {
                   if (loadingProgress == null) return child;
                   return Container(
                     width: MediaQuery.of(context).size.width / 4,
-                    height: MediaQuery.of(context).size.height / 6,
+                    height: MediaQuery.of(context).size.width / 3,
                     decoration: BoxDecoration(
                       color: AppColors.placeholder,
                       borderRadius: BorderRadius.circular(10),

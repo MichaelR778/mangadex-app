@@ -33,16 +33,10 @@ class Manga {
     try {
       List<dynamic> altTitles = attributes['altTitles'];
       title = attributes['title']['en'] ??
+          attributes['title'].values.first ??
           altTitles
-              .firstWhere((json) => json.keys.first == 'en')
-              .values
-              .first ??
-          altTitles
-              .firstWhere((json) => json.keys.first == 'ja-ro')
-              .values
-              .first ??
-          altTitles
-              .firstWhere((json) => json.keys.first == 'ko-ro')
+              .firstWhere(
+                  (json) => ['en', 'ja-ro', 'ko-ro'].contains(json.keys.first))
               .values
               .first;
     } catch (e) {}
