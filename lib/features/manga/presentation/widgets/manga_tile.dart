@@ -53,69 +53,76 @@ class _MangaTileState extends State<MangaTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MangaPage(manga: widget.manga),
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MangaPage(manga: widget.manga),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // cover art
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.network(
+              widget.manga.coverUrl,
+              width: MediaQuery.of(context).size.width / 4,
+              height: MediaQuery.of(context).size.width / 3,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Container(
+                  width: MediaQuery.of(context).size.width / 4,
+                  height: MediaQuery.of(context).size.width / 3,
+                  decoration: BoxDecoration(
+                    color: AppColors.placeholder,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                );
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  width: MediaQuery.of(context).size.width / 4,
+                  height: MediaQuery.of(context).size.width / 3,
+                  decoration: BoxDecoration(
+                    color: AppColors.placeholder,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                );
+              },
+            ),
           ),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // cover art
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                widget.manga.coverUrl,
-                width: MediaQuery.of(context).size.width / 4,
-                height: MediaQuery.of(context).size.width / 3,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Container(
-                    width: MediaQuery.of(context).size.width / 4,
-                    height: MediaQuery.of(context).size.width / 3,
-                    decoration: BoxDecoration(
-                      color: AppColors.placeholder,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  );
-                },
-              ),
-            ),
 
-            const SizedBox(width: 10),
+          const SizedBox(width: 10),
 
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // title
-                  Text(
-                    widget.manga.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // title
+                Text(
+                  widget.manga.title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
 
-                  // tags
-                  _tags(),
+                // tags
+                _tags(),
 
-                  // desc
-                  Text(
-                    widget.manga.description,
-                    maxLines: 4,
-                    overflow: TextOverflow.fade,
-                  ),
-                ],
-              ),
+                // desc
+                Text(
+                  widget.manga.description,
+                  maxLines: 4,
+                  overflow: TextOverflow.fade,
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

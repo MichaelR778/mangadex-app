@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:mangadex_app/features/manga/domain/entities/chapter.dart';
 import 'package:mangadex_app/features/manga/domain/entities/chapter_list.dart';
@@ -60,6 +61,8 @@ class MangadexMangaRepo implements MangaRepo {
 
       // something went wrong
       throw Exception('Error code ${response.statusCode}');
+    } on SocketException {
+      throw Exception('No internet connection');
     } catch (e) {
       throw Exception('Failed to search manga by title: $e');
     }
@@ -97,6 +100,8 @@ class MangadexMangaRepo implements MangaRepo {
 
       // something went wrong
       throw Exception('Error code ${response.statusCode}');
+    } on SocketException {
+      throw Exception('No internet connection');
     } catch (e) {
       throw Exception('Failed to get manga by ids: $e');
     }
@@ -143,6 +148,8 @@ class MangadexMangaRepo implements MangaRepo {
 
       // something went wrong
       throw Exception('Error code ${response.statusCode}');
+    } on SocketException {
+      throw Exception('No internet connection');
     } catch (e) {
       throw Exception('Failed to get manga chapters: $e');
     }
@@ -180,6 +187,8 @@ class MangadexMangaRepo implements MangaRepo {
 
       // something went wrong
       throw Exception('Error code ${response.statusCode}');
+    } on SocketException {
+      throw Exception('No internet connection');
     } catch (e) {
       throw Exception('Failed to get chapter images: $e');
     }

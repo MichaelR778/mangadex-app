@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mangadex_app/features/favorite/presentation/cubits/favorite_cubit.dart';
-import 'package:mangadex_app/features/favorite/presentation/cubits/favorite_state.dart';
+import 'package:mangadex_app/features/history/presentation/cubits/history_cubit.dart';
+import 'package:mangadex_app/features/history/presentation/cubits/history_state.dart';
 import 'package:mangadex_app/features/manga/presentation/widgets/manga_tile.dart';
 import 'package:mangadex_app/theme/app_colors.dart';
 
-class FavoritePage extends StatelessWidget {
-  const FavoritePage({super.key});
+class HistoryPage extends StatelessWidget {
+  const HistoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
         title: const Row(
           children: [
             Text(
-              'Favorites',
+              'History',
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
@@ -35,58 +39,31 @@ class FavoritePage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: BlocBuilder<FavoriteCubit, FavoriteState>(
+        child: BlocBuilder<HistoryCubit, HistoryState>(
           builder: (context, state) {
             // loading
-            if (state is FavoriteLoading) {
+            if (state is HistoryLoading) {
               return const Center(child: CircularProgressIndicator());
             }
 
             // loaded
-            else if (state is FavoriteLoaded) {
+            else if (state is HistoryLoaded) {
               final mangas = state.mangas;
-
-              if (mangas.isEmpty) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/vectors/ufo.svg',
-                      width: MediaQuery.of(context).size.width / 1.7,
-                      height: MediaQuery.of(context).size.width / 1.7,
-                    ),
-                    const SizedBox(height: 5),
-                    Align(
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width / 1.7,
-                        child: const Text(
-                          'No favorite',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              }
-
-              return RefreshIndicator(
-                onRefresh: () => context.read<FavoriteCubit>().loadFavorites(),
-                child: ListView.separated(
-                  itemCount: mangas.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 15),
-                  itemBuilder: (context, index) {
-                    final manga = mangas[index];
-                    return MangaTile(manga: manga);
-                  },
-                ),
+              return ListView.separated(
+                itemCount: mangas.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 15),
+                itemBuilder: (context, index) {
+                  final manga = mangas[index];
+                  return MangaTile(manga: manga);
+                },
               );
             }
 
             // error
-            else if (state is FavoriteError) {
+            else if (state is HistoryError) {
               return RefreshIndicator(
-                onRefresh: () => context.read<FavoriteCubit>().loadFavorites(),
+                onRefresh: () => context.read<HistoryCubit>().loadHistory(),
                 child: ListView(
                   children: [
                     SvgPicture.asset(

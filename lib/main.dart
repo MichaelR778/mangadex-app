@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mangadex_app/features/favorite/data/firebase_favorite_repo.dart';
 import 'package:mangadex_app/features/favorite/presentation/cubits/favorite_cubit.dart';
+import 'package:mangadex_app/features/history/data/firebase_history_repo.dart';
+import 'package:mangadex_app/features/history/presentation/cubits/history_cubit.dart';
 import 'package:mangadex_app/features/home/presentation/cubits/home_cubit.dart';
 import 'package:mangadex_app/features/manga/data/mangadex_manga_repo.dart';
 import 'package:mangadex_app/features/manga/presentation/cubits/chapter_cubit.dart';
@@ -28,6 +30,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final mangaRepo = MangadexMangaRepo();
     final favoriteRepo = FirebaseFavoriteRepo();
+    final historyRepo = FirebaseHistoryRepo();
 
     return MultiBlocProvider(
       providers: [
@@ -46,6 +49,12 @@ class MainApp extends StatelessWidget {
         BlocProvider<FavoriteCubit>(
           create: (context) => FavoriteCubit(
             favoriteRepo: favoriteRepo,
+            mangaRepo: mangaRepo,
+          ),
+        ),
+        BlocProvider<HistoryCubit>(
+          create: (context) => HistoryCubit(
+            historyRepo: historyRepo,
             mangaRepo: mangaRepo,
           ),
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mangadex_app/features/favorite/presentation/cubits/favorite_cubit.dart';
 import 'package:mangadex_app/features/favorite/presentation/cubits/favorite_state.dart';
+import 'package:mangadex_app/features/history/presentation/cubits/history_cubit.dart';
 import 'package:mangadex_app/features/manga/domain/entities/manga.dart';
 import 'package:mangadex_app/features/manga/presentation/cubits/chapter_cubit.dart';
 import 'package:mangadex_app/features/manga/presentation/cubits/chapter_state.dart';
@@ -140,6 +141,16 @@ class _MangaPageState extends State<MangaPage> {
                 ),
               );
             },
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  color: AppColors.placeholder,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              );
+            },
           ),
 
           SingleChildScrollView(
@@ -185,6 +196,16 @@ class _MangaPageState extends State<MangaPage> {
                               loadingBuilder:
                                   (context, child, loadingProgress) {
                                 if (loadingProgress == null) return child;
+                                return Container(
+                                  width: MediaQuery.of(context).size.width / 4,
+                                  height: MediaQuery.of(context).size.width / 3,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.placeholder,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
                                 return Container(
                                   width: MediaQuery.of(context).size.width / 4,
                                   height: MediaQuery.of(context).size.width / 3,
@@ -268,13 +289,20 @@ class _MangaPageState extends State<MangaPage> {
                                       itemBuilder: (context, index) {
                                         final chapter = chapters[index];
                                         return ListTile(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ChapterPage(chapter: chapter),
-                                            ),
-                                          ),
+                                          onTap: () {
+                                            context
+                                                .read<HistoryCubit>()
+                                                .addHistory(widget.manga.id);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ChapterPage(
+                                                  chapter: chapter,
+                                                ),
+                                              ),
+                                            );
+                                          },
                                           leading: const Icon(
                                             Icons.arrow_right,
                                             color: AppColors.primary,

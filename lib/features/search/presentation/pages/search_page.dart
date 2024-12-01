@@ -112,87 +112,106 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ),
       ),
-      body: Column(
-        children: [
-          // search text field
-          Container(
-            padding: const EdgeInsets.only(
-              top: 8,
-              left: 16,
-              right: 16,
-              bottom: 16,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          children: [
+            // search text field
+            Container(
+              padding: const EdgeInsets.only(
+                top: 8,
+                left: 6,
+                right: 6,
+                bottom: 16,
+              ),
+              child: SearchField(
+                controller: controller,
+                onSubmitted: (_) => search(0),
+              ),
             ),
-            child: SearchField(
-              controller: controller,
-              onSubmitted: (_) => search(0),
-            ),
-          ),
 
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 10,
-              right: 10,
-              bottom: 5,
-            ),
-            child: Row(
+            Row(
               children: [
                 _orderOption('Most Followed'),
                 const SizedBox(width: 10),
                 _orderOption('Latest Updated'),
               ],
             ),
-          ),
 
-          // body
-          Expanded(
-            child: BlocBuilder<SearchCubit, SearchState>(
-              builder: (context, state) {
-                // init
-                // if (state is SearchInitial) {
-                //   return Column(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     crossAxisAlignment: CrossAxisAlignment.center,
-                //     children: [
-                //       SvgPicture.asset(
-                //         'assets/vectors/search.svg',
-                //         width: MediaQuery.of(context).size.width / 1.7,
-                //         height: MediaQuery.of(context).size.width / 1.7,
-                //       ),
-                //       const SizedBox(height: 5),
-                //       SizedBox(
-                //         width: MediaQuery.of(context).size.width / 1.7,
-                //         child: const Text(
-                //           'Search by title',
-                //           textAlign: TextAlign.center,
-                //         ),
-                //       ),
-                //     ],
-                //   );
-                // }
+            const SizedBox(height: 5),
 
-                // loading
-                if (state is SearchLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+            // body
+            Expanded(
+              child: BlocBuilder<SearchCubit, SearchState>(
+                builder: (context, state) {
+                  // loading
+                  if (state is SearchLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                // loaded
-                else if (state is SearchLoaded) {
-                  final mangas = state.mangaList.mangas;
+                  // loaded
+                  else if (state is SearchLoaded) {
+                    final mangas = state.mangaList.mangas;
 
-                  if (mangas.isEmpty) {
+                    if (mangas.isEmpty) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/vectors/empty.svg',
+                            width: MediaQuery.of(context).size.width / 1.7,
+                            height: MediaQuery.of(context).size.width / 1.7,
+                          ),
+                          const SizedBox(height: 5),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width / 1.7,
+                            child: const Text(
+                              'Not found',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+
+                    final currIndex = state.mangaList.currIndex;
+                    final totalPage = state.mangaList.totalPage;
+
+                    return ListView(
+                      children: [
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: mangas.length,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 15),
+                          itemBuilder: (context, index) {
+                            final manga = mangas[index];
+                            return MangaTile(manga: manga);
+                          },
+                        ),
+                        totalPage > 1
+                            ? _pageNav(currIndex, totalPage)
+                            : Container(),
+                      ],
+                    );
+                  }
+
+                  // error
+                  else if (state is SearchError) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SvgPicture.asset(
-                          'assets/vectors/empty.svg',
+                          'assets/vectors/error.svg',
                           width: MediaQuery.of(context).size.width / 1.7,
                           height: MediaQuery.of(context).size.width / 1.7,
                         ),
                         const SizedBox(height: 5),
                         SizedBox(
                           width: MediaQuery.of(context).size.width / 1.7,
-                          child: const Text(
-                            'Not found',
+                          child: Text(
+                            state.message,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -200,57 +219,13 @@ class _SearchPageState extends State<SearchPage> {
                     );
                   }
 
-                  final currIndex = state.mangaList.currIndex;
-                  final totalPage = state.mangaList.totalPage;
-
-                  return ListView(
-                    children: [
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: mangas.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 15),
-                        itemBuilder: (context, index) {
-                          final manga = mangas[index];
-                          return MangaTile(manga: manga);
-                        },
-                      ),
-                      totalPage > 1
-                          ? _pageNav(currIndex, totalPage)
-                          : Container(),
-                    ],
-                  );
-                }
-
-                // error
-                else if (state is SearchError) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/vectors/error.svg',
-                        width: MediaQuery.of(context).size.width / 1.7,
-                        height: MediaQuery.of(context).size.width / 1.7,
-                      ),
-                      const SizedBox(height: 5),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 1.7,
-                        child: Text(
-                          state.message,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  );
-                }
-
-                // other
-                return Container();
-              },
+                  // other
+                  return Container();
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

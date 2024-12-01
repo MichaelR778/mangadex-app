@@ -19,22 +19,27 @@ class FavoriteCubit extends Cubit<FavoriteState> {
 
   Future<void> loadFavorites() async {
     try {
-      // emit(FavoriteLoading());
+      emit(FavoriteLoading());
 
       favoriteSubscription?.cancel();
 
       favoriteSubscription = favoriteRepo.getFavorites().listen(
         (mangaIds) async {
-          if (mangaIds.isEmpty) {
-            emit(FavoriteLoaded(mangaIds: mangaIds, mangas: []));
-            return;
+          try {
+            if (mangaIds.isEmpty) {
+              emit(FavoriteLoaded(mangaIds: mangaIds, mangas: []));
+              return;
+            }
+            final mangas = await mangaRepo.getMangas(mangaIds);
+            emit(FavoriteLoaded(mangaIds: mangaIds, mangas: mangas));
+          } catch (e) {
+            emit(FavoriteError(message: e.toString()));
           }
-          final mangas = await mangaRepo.getMangas(mangaIds);
-          emit(FavoriteLoaded(mangaIds: mangaIds, mangas: mangas));
         },
         onError: (error) {
           emit(FavoriteError(message: error.toString()));
         },
+        cancelOnError: true,
       );
     } catch (e) {
       emit(FavoriteError(message: e.toString()));
