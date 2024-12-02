@@ -84,6 +84,9 @@ class _HomePageState extends State<HomePage> {
             // history
             BlocBuilder<HistoryCubit, HistoryState>(
               builder: (context, state) {
+                if (state is HistoryError) {
+                  return Text(state.message);
+                }
                 if (state is HistoryLoaded) {
                   List<Manga> mangas = state.mangas;
                   if (mangas.isEmpty) return Container();
@@ -142,8 +145,9 @@ class _HomePageState extends State<HomePage> {
                                       fit: BoxFit.cover,
                                       loadingBuilder:
                                           (context, child, loadingProgress) {
-                                        if (loadingProgress == null)
+                                        if (loadingProgress == null) {
                                           return child;
+                                        }
                                         return Container(
                                           width: MediaQuery.of(context)
                                                   .size

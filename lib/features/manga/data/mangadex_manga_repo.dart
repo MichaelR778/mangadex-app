@@ -75,6 +75,7 @@ class MangadexMangaRepo implements MangaRepo {
         baseUrl,
         '/manga',
         {
+          'limit': '100',
           'ids[]': mangaIds,
           'includes[]': ['cover_art'],
           'availableTranslatedLanguage[]': ['en', 'id'],
