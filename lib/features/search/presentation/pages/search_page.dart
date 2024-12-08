@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mangadex_app/features/manga/presentation/widgets/manga_tile.dart';
 import 'package:mangadex_app/features/search/presentation/cubits/search_cubit.dart';
 import 'package:mangadex_app/features/search/presentation/cubits/search_state.dart';
-import 'package:mangadex_app/features/search/presentation/widgets/search_field.dart';
+import 'package:mangadex_app/features/svg_view/svg_view.dart';
 import 'package:mangadex_app/theme/app_colors.dart';
 
 class SearchPage extends StatefulWidget {
@@ -124,9 +123,14 @@ class _SearchPageState extends State<SearchPage> {
                 right: 6,
                 bottom: 16,
               ),
-              child: SearchField(
+              child: TextField(
                 controller: controller,
                 onSubmitted: (_) => search(0),
+                cursorColor: const Color(0x33FFFFFF),
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.search),
+                  hintText: 'Search',
+                ),
               ),
             ),
 
@@ -154,23 +158,9 @@ class _SearchPageState extends State<SearchPage> {
                     final mangas = state.mangaList.mangas;
 
                     if (mangas.isEmpty) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            'assets/vectors/empty.svg',
-                            width: MediaQuery.of(context).size.width / 1.7,
-                            height: MediaQuery.of(context).size.width / 1.7,
-                          ),
-                          const SizedBox(height: 5),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 1.7,
-                            child: const Text(
-                              'Not found',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
+                      return const SvgView(
+                        svgFileName: 'empty',
+                        message: 'Not Found',
                       );
                     }
 
@@ -199,23 +189,9 @@ class _SearchPageState extends State<SearchPage> {
 
                   // error
                   else if (state is SearchError) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/vectors/error.svg',
-                          width: MediaQuery.of(context).size.width / 1.7,
-                          height: MediaQuery.of(context).size.width / 1.7,
-                        ),
-                        const SizedBox(height: 5),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 1.7,
-                          child: Text(
-                            state.message,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
+                    return SvgView(
+                      svgFileName: 'error',
+                      message: state.message,
                     );
                   }
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:mangadex_app/features/favorite/presentation/cubits/favorite_cubit.dart';
 import 'package:mangadex_app/features/favorite/presentation/cubits/favorite_state.dart';
 import 'package:mangadex_app/features/manga/presentation/widgets/manga_tile.dart';
+import 'package:mangadex_app/features/svg_view/svg_view.dart';
 import 'package:mangadex_app/theme/app_colors.dart';
 
 class FavoritePage extends StatelessWidget {
@@ -47,25 +47,9 @@ class FavoritePage extends StatelessWidget {
               final mangas = state.mangas;
 
               if (mangas.isEmpty) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/vectors/ufo.svg',
-                      width: MediaQuery.of(context).size.width / 1.7,
-                      height: MediaQuery.of(context).size.width / 1.7,
-                    ),
-                    const SizedBox(height: 5),
-                    Align(
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width / 1.7,
-                        child: const Text(
-                          'No favorite',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ],
+                return const SvgView(
+                  svgFileName: 'ufo',
+                  message: 'No Favorite',
                 );
               }
 
@@ -87,22 +71,11 @@ class FavoritePage extends StatelessWidget {
             else if (state is FavoriteError) {
               return RefreshIndicator(
                 onRefresh: () => context.read<FavoriteCubit>().loadFavorites(),
-                child: ListView(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/vectors/error.svg',
-                      width: MediaQuery.of(context).size.width / 1.7,
-                      height: MediaQuery.of(context).size.width / 1.7,
-                    ),
-                    const SizedBox(height: 5),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 1.7,
-                      child: Text(
-                        state.message,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  child: SvgView(
+                    svgFileName: 'error',
+                    message: state.message,
+                  ),
                 ),
               );
             }

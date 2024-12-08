@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:mangadex_app/features/history/presentation/cubits/history_cubit.dart';
 import 'package:mangadex_app/features/history/presentation/cubits/history_state.dart';
 import 'package:mangadex_app/features/manga/presentation/widgets/manga_tile.dart';
+import 'package:mangadex_app/features/svg_view/svg_view.dart';
 import 'package:mangadex_app/theme/app_colors.dart';
 
 class HistoryPage extends StatelessWidget {
@@ -64,22 +64,11 @@ class HistoryPage extends StatelessWidget {
             else if (state is HistoryError) {
               return RefreshIndicator(
                 onRefresh: () => context.read<HistoryCubit>().loadHistory(),
-                child: ListView(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/vectors/error.svg',
-                      width: MediaQuery.of(context).size.width / 1.7,
-                      height: MediaQuery.of(context).size.width / 1.7,
-                    ),
-                    const SizedBox(height: 5),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 1.7,
-                      child: Text(
-                        state.message,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  child: SvgView(
+                    svgFileName: 'error',
+                    message: state.message,
+                  ),
                 ),
               );
             }

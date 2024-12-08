@@ -7,6 +7,7 @@ import 'package:mangadex_app/features/manga/domain/entities/manga.dart';
 import 'package:mangadex_app/features/manga/presentation/cubits/chapter_cubit.dart';
 import 'package:mangadex_app/features/manga/presentation/cubits/chapter_state.dart';
 import 'package:mangadex_app/features/manga/presentation/pages/chapter_page.dart';
+import 'package:mangadex_app/features/manga/presentation/widgets/manga_cover_card.dart';
 import 'package:mangadex_app/features/manga/presentation/widgets/manga_tags.dart';
 import 'package:mangadex_app/theme/app_colors.dart';
 
@@ -186,37 +187,7 @@ class _MangaPageState extends State<MangaPage> {
                       child: Row(
                         children: [
                           // cover image
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              widget.manga.coverUrl,
-                              width: MediaQuery.of(context).size.width / 4,
-                              height: MediaQuery.of(context).size.width / 3,
-                              fit: BoxFit.cover,
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Container(
-                                  width: MediaQuery.of(context).size.width / 4,
-                                  height: MediaQuery.of(context).size.width / 3,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.placeholder,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  width: MediaQuery.of(context).size.width / 4,
-                                  height: MediaQuery.of(context).size.width / 3,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.placeholder,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                          MangaCoverCard(imageUrl: widget.manga.coverUrl),
 
                           const SizedBox(width: 10),
 

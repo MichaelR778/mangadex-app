@@ -11,5 +11,22 @@ class AppTheme {
       scrolledUnderElevation: 0,
       centerTitle: false,
     ),
+    inputDecorationTheme: InputDecorationTheme(
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(
+          color: AppColors.primary,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      hintStyle: const TextStyle(
+        color: Color(0x33FFFFFF),
+      ),
+      filled: true,
+      fillColor: const Color(0xff2B2B2B),
+    ),
   );
 }
