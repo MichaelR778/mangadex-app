@@ -104,15 +104,24 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Expanded(child: Container()),
-                          IconButton(
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const HistoryPage(),
-                              ),
-                            ),
-                            icon: const Icon(Icons.arrow_forward_ios),
-                          ),
+                          mangas.length == 10
+                              ? GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const HistoryPage(),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'See more',
+                                    style: TextStyle(
+                                      color: AppColors.primary,
+                                      // fontSize: 12,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
+                              : Container(),
                         ],
                       ),
                       SizedBox(

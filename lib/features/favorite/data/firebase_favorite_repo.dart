@@ -1,13 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mangadex_app/features/favorite/domain/repos/favorite_repo.dart';
 
 class FirebaseFavoriteRepo implements FavoriteRepo {
+  final firebaseAuth = FirebaseAuth.instance;
   final firebaseFirestore = FirebaseFirestore.instance;
 
   @override
   Stream<List<String>> getFavorites() {
     try {
       final stream = firebaseFirestore
+          .collection('Users')
+          .doc(firebaseAuth.currentUser!.uid)
           .collection('Favorites')
           .snapshots()
           .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
@@ -20,8 +24,12 @@ class FirebaseFavoriteRepo implements FavoriteRepo {
   @override
   Future<void> toggleFavorite(String mangaId) async {
     try {
-      final favoriteDoc =
-          await firebaseFirestore.collection('Favorites').doc(mangaId).get();
+      final favoriteDoc = await firebaseFirestore
+          .collection('Users')
+          .doc(firebaseAuth.currentUser!.uid)
+          .collection('Favorites')
+          .doc(mangaId)
+          .get();
 
       // remove from favorite
       if (favoriteDoc.exists) {
@@ -30,10 +38,16 @@ class FirebaseFavoriteRepo implements FavoriteRepo {
 
       // add to favorite
       else {
-        final favorites = await firebaseFirestore.collection('Favorites').get();
+        final favorites = await firebaseFirestore
+            .collection('Users')
+            .doc(firebaseAuth.currentUser!.uid)
+            .collection('Favorites')
+            .get();
         final favCount = favorites.docs.length;
         if (favCount < 100) {
           firebaseFirestore
+              .collection('Users')
+              .doc(firebaseAuth.currentUser!.uid)
               .collection('Favorites')
               .doc(mangaId)
               .set({}); //await?

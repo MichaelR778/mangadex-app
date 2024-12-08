@@ -5,7 +5,9 @@ import 'package:mangadex_app/features/manga/domain/repos/manga_repo.dart';
 class HomeCubit extends Cubit<HomeState> {
   final MangaRepo mangaRepo;
 
-  HomeCubit({required this.mangaRepo}) : super(HomeLoading()) {
+  HomeCubit({required this.mangaRepo}) : super(HomeLoading());
+
+  void init() {
     fetchLatest(0);
   }
 

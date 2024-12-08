@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mangadex_app/features/auth/presentation/cubits/auth_cubit.dart';
 import 'package:mangadex_app/features/favorite/presentation/cubits/favorite_cubit.dart';
 import 'package:mangadex_app/features/favorite/presentation/cubits/favorite_state.dart';
 import 'package:mangadex_app/features/manga/presentation/widgets/manga_tile.dart';
@@ -32,6 +33,17 @@ class FavoritePage extends StatelessWidget {
             ),
           ],
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.read<AuthCubit>().logout();
+            },
+            icon: const Icon(
+              Icons.logout,
+              color: AppColors.placeholder,
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),

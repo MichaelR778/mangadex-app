@@ -1,13 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mangadex_app/features/history/domain/history_repo.dart';
 
 class FirebaseHistoryRepo implements HistoryRepo {
+  final firebaseAuth = FirebaseAuth.instance;
   final firebaseFirestore = FirebaseFirestore.instance;
 
   @override
   Stream<List<String>> getHistory() {
     try {
       final stream = firebaseFirestore
+          .collection('Users')
+          .doc(firebaseAuth.currentUser!.uid)
           .collection('History')
           .orderBy('time', descending: true)
           .snapshots()
@@ -22,6 +26,8 @@ class FirebaseHistoryRepo implements HistoryRepo {
   Future<void> addHistory(String mangaId) async {
     try {
       await firebaseFirestore
+          .collection('Users')
+          .doc(firebaseAuth.currentUser!.uid)
           .collection('History')
           .doc(mangaId)
           .set({'time': Timestamp.fromDate(DateTime.now())});

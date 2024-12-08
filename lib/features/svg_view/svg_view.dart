@@ -22,11 +22,13 @@ class SvgView extends StatelessWidget {
           height: MediaQuery.of(context).size.width / 1.7,
         ),
         const SizedBox(height: 5),
-        SizedBox(
-          width: MediaQuery.of(context).size.width / 1.7,
-          child: Text(
-            message,
-            textAlign: TextAlign.center,
+        Align(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width / 1.7,
+            child: Text(
+              message,
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       ],

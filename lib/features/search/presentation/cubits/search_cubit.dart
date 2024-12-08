@@ -7,7 +7,9 @@ class SearchCubit extends Cubit<SearchState> {
   String lastSearch = '';
   bool orderByFollow = true;
 
-  SearchCubit({required this.mangaRepo}) : super(SearchLoading()) {
+  SearchCubit({required this.mangaRepo}) : super(SearchLoading());
+
+  void init() {
     searchByTitle('', 0, mostFollowed: true);
   }
 

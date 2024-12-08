@@ -13,9 +13,9 @@ class FavoriteCubit extends Cubit<FavoriteState> {
   FavoriteCubit({
     required this.favoriteRepo,
     required this.mangaRepo,
-  }) : super(FavoriteLoading()) {
-    loadFavorites();
-  }
+  }) : super(FavoriteLoading());
+
+  void init() => loadFavorites();
 
   Future<void> loadFavorites() async {
     try {

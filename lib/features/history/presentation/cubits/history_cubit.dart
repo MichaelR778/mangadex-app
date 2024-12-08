@@ -13,12 +13,13 @@ class HistoryCubit extends Cubit<HistoryState> {
   HistoryCubit({
     required this.historyRepo,
     required this.mangaRepo,
-  }) : super(HistoryLoading()) {
-    loadHistory();
-  }
+  }) : super(HistoryLoading());
+
+  void init() => loadHistory();
 
   Future<void> loadHistory() async {
     try {
+      print('INIT GOT CALLED');
       emit(HistoryLoading());
 
       historySubscription?.cancel();
