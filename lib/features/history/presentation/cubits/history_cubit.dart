@@ -19,7 +19,6 @@ class HistoryCubit extends Cubit<HistoryState> {
 
   Future<void> loadHistory() async {
     try {
-      print('INIT GOT CALLED');
       emit(HistoryLoading());
 
       historySubscription?.cancel();

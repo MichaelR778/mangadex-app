@@ -83,11 +83,13 @@ class FavoritePage extends StatelessWidget {
             else if (state is FavoriteError) {
               return RefreshIndicator(
                 onRefresh: () => context.read<FavoriteCubit>().loadFavorites(),
-                child: SingleChildScrollView(
-                  child: SvgView(
-                    svgFileName: 'error',
-                    message: state.message,
-                  ),
+                child: ListView(
+                  children: [
+                    SvgView(
+                      svgFileName: 'error',
+                      message: state.message,
+                    ),
+                  ],
                 ),
               );
             }

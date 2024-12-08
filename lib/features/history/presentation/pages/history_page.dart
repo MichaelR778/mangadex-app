@@ -62,14 +62,9 @@ class HistoryPage extends StatelessWidget {
 
             // error
             else if (state is HistoryError) {
-              return RefreshIndicator(
-                onRefresh: () => context.read<HistoryCubit>().loadHistory(),
-                child: SingleChildScrollView(
-                  child: SvgView(
-                    svgFileName: 'error',
-                    message: state.message,
-                  ),
-                ),
+              return SvgView(
+                svgFileName: 'error',
+                message: state.message,
               );
             }
 

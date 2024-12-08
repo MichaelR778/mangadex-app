@@ -3,8 +3,15 @@ import 'package:mangadex_app/theme/app_colors.dart';
 
 class AppTheme {
   static final appTheme = ThemeData(
+    // colorScheme: ColorScheme.fromSwatch().copyWith(
+    //   primary: AppColors.primary,
+    //   onSurface: Colors.white,
+    //   brightness: Brightness.dark,
+    // ),
+    colorScheme: const ColorScheme.dark(
+      primary: AppColors.primary,
+    ),
     primaryColor: AppColors.primary,
-    brightness: Brightness.dark,
     scaffoldBackgroundColor: AppColors.background,
     appBarTheme: const AppBarTheme(
       color: Colors.transparent,
