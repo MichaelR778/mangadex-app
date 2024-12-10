@@ -67,13 +67,19 @@ class App extends StatelessWidget {
           builder: (context, state) {
             if (state is Unauthenticated) {
               return const AuthPage();
+            } else if (state is Authenticated) {
+              context.read<HomeCubit>().init();
+              context.read<SearchCubit>().init();
+              context.read<FavoriteCubit>().init();
+              context.read<HistoryCubit>().init();
+              return const Root();
             }
 
-            context.read<HomeCubit>().init();
-            context.read<SearchCubit>().init();
-            context.read<FavoriteCubit>().init();
-            context.read<HistoryCubit>().init();
-            return const Root();
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
           },
         ),
       ),
